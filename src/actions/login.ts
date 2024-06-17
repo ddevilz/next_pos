@@ -31,7 +31,6 @@ export const login = async (values: LoginSchemaType) => {
       switch (error.type) {
         case "CredentialsSignin":
           return { error: "Invalid credentials" };
-
         default:
           return { error: "Something went wrong" };
       }

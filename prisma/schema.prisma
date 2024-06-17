@@ -22,3 +22,28 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Category {
+  category  String   @id
+  catid     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+model Service {
+  ino    Int     @id
+  iname  String  @db.VarChar(75)
+  rate1  Float
+  rate2  Float
+  rate3  Float
+  rate4  Float
+  rate5  Float
+  itype  String  @db.VarChar(30)
+}
+model Order {
+  orderNumber    Int      @id
+  dueDate        DateTime?
+  dueTime        DateTime? @db.Time
+  customer       String   @db.VarChar(255)
+  totalQuantity  Int
+  orderStatus    String   @db.VarChar(200)
+}
