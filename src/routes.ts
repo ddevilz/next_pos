@@ -1,4 +1,4 @@
-export const publicRoutes = ["/", "/new-verification"];
+export const publicRoutes = ["/login", "/new-verification"];
 
 export const authRoutes = ["/login", "/register", "/error"];
 

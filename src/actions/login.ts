@@ -1,8 +1,5 @@
 "use server";
 
-import * as z from "zod";
-import bcrypt from "bcryptjs";
-
 import { LoginSchema, LoginSchemaType } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
 import { signIn } from "@/auth";
