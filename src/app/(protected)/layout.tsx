@@ -1,15 +1,13 @@
 import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
 
-interface ProtectedLayoutProps {
-  children: React.ReactNode;
-}
-
-export const ProtectedLayout = async ({ children }: ProtectedLayoutProps) => {
+const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await auth();
   return (
-    <div className="h-full w-full flex flex-col gap-y-10 items-center justify-center">
+    <div className="h-screen flex items-center justify-center  bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800 ">
       <SessionProvider session={session}>{children}</SessionProvider>
     </div>
   );
 };
+
+export default ProtectedLayout;
