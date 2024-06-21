@@ -69,12 +69,9 @@ export const modifyServiceHandler = async (
 export const deleteServiceHandler = async (ino: number) => {
   try {
     const existingService = await getServiceById(ino);
-    console.log(existingService);
-
     if (!existingService) {
       return { error: "Service not found" };
     }
-
     await deleteService(ino);
     return { success: "Service deleted successfully!" };
   } catch (error) {

@@ -28,6 +28,7 @@ type ServiceFormProps = {
   onUpdateService: (service: ServiceSchemaType) => void;
   onDeleteService: (ino: number) => void;
   editingService: ServiceSchemaType | null;
+  categories: string[];
 };
 
 export const ServiceForm: React.FC<ServiceFormProps> = ({
@@ -35,6 +36,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({
   onUpdateService,
   onDeleteService,
   editingService,
+  categories,
 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>("");
@@ -119,12 +121,16 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({
         if (!editingService.ino) {
           throw error;
         }
-        await deleteServiceHandler(editingService.ino);
-        onDeleteService(editingService.ino);
-        setSuccess("Service deleted successfully!");
-        form.reset();
+        const response = await deleteServiceHandler(editingService.ino);
+        if (response.success) {
+          onDeleteService(editingService.ino);
+          setSuccess(response.success);
+          form.reset();
+        } else {
+          setError(response.error);
+          console.error(response.error);
+        }
       } catch (error) {
-        setError("An error occurred. Please try again.");
         console.error(error);
       } finally {
         setLoading(false);
@@ -180,12 +186,18 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({
                 <FormItem>
                   <FormLabel>Service Type</FormLabel>
                   <FormControl>
-                    <Input
+                    <select
                       {...field}
                       disabled={loading}
-                      placeholder="Service type"
-                      type="text"
-                    />
+                      className="w-full p-2 border rounded"
+                    >
+                      <option value="">Select a category</option>
+                      {categories.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

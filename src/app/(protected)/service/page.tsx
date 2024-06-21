@@ -3,10 +3,11 @@ import React, { useState, useEffect } from "react";
 import { ServiceForm } from "@/components/service/service-form";
 import { DataTableDemo } from "@/components/service/data-table";
 import { ServiceSchemaType } from "@/schemas";
+import { deleteServiceHandler } from "@/actions/service";
 
 const ParentComponent: React.FC = () => {
   const [services, setServices] = useState<ServiceSchemaType[]>([]);
-
+  const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingService, setEditingService] =
     useState<ServiceSchemaType | null>(null);
@@ -26,8 +27,24 @@ const ParentComponent: React.FC = () => {
         setLoading(false);
       }
     };
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/category");
+        if (!response.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+        const data = await response.json();
+        console.log("Fetched categories:", data.categories);
+        setCategories(
+          data.categories.map((cat: { category: string }) => cat.category)
+        );
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
 
     fetchServices();
+    fetchCategories();
   }, []);
 
   const handleAddService = (service: ServiceSchemaType) => {
@@ -45,10 +62,17 @@ const ParentComponent: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  const handleDeleteService = (ino: number) => {
-    setServices((prevServices) =>
-      prevServices.filter((service) => service.ino !== ino)
-    );
+  const handleDeleteService = async (ino: number) => {
+    try {
+      const response = await deleteServiceHandler(ino);
+      if (response.success) {
+        setServices((prevServices) =>
+          prevServices.filter((service) => service.ino !== ino)
+        );
+      } else {
+        console.error(response.error);
+      }
+    } catch (error) {}
   };
 
   return (
@@ -59,6 +83,7 @@ const ParentComponent: React.FC = () => {
           onUpdateService={handleUpdateService}
           onDeleteService={handleDeleteService}
           editingService={editingService}
+          categories={categories}
         />
       </div>
       <DataTableDemo

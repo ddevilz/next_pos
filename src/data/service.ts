@@ -42,14 +42,11 @@ export const getServiceById = async (ino: number) => {
 
 export const deleteService = async (ino: number) => {
   try {
-    console.log(`Attempting to delete service with ino: ${ino}`);
     const result = await db.service.delete({
       where: { ino },
     });
-    console.log(`Service with ino: ${ino} deleted successfully`);
     return result;
   } catch (error) {
-    console.error(`Error deleting service with ino: ${ino}`, error);
     throw error;
   }
 };
