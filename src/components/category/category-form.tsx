@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CategorySchema, CategorySchemaType } from "@/schemas";
@@ -15,12 +15,31 @@ import {
 } from "@/components/ui/form";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { createCategoryHandler } from "@/actions/category";
+import {
+  createCategoryHandler,
+  modifyCategoryHandler,
+  deleteCategoryHandler,
+} from "@/actions/category";
 
-export const CategoryForm: React.FC = () => {
+type CategoryFormProps = {
+  onAddCategory: (category: CategorySchemaType) => void;
+  onUpdateCategory: (category: CategorySchemaType) => void;
+  editingCategory: CategorySchemaType | null;
+
+  onDeleteCategory: (catid: string) => void;
+};
+
+export const CategoryForm: React.FC<CategoryFormProps> = ({
+  onAddCategory,
+  onUpdateCategory,
+  editingCategory,
+
+  onDeleteCategory,
+}) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+  const successTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const form = useForm<CategorySchemaType>({
     resolver: zodResolver(CategorySchema),
@@ -30,18 +49,42 @@ export const CategoryForm: React.FC = () => {
     },
   });
 
+  useEffect(() => {
+    if (editingCategory) {
+      form.setValue("catid", editingCategory.catid);
+      form.setValue("category", editingCategory.category);
+    } else {
+      form.reset();
+    }
+  }, [editingCategory, form]);
+
+  useEffect(() => {
+    return () => {
+      if (successTimeoutRef.current) {
+        clearTimeout(successTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const onSubmit = async (values: CategorySchemaType) => {
     setLoading(true);
     setError("");
     setSuccess("");
 
     try {
-      const response = await createCategoryHandler(values);
-      if (response.error) {
-        setError(response.error);
+      if (editingCategory) {
+        await modifyCategoryHandler(values.catid, values);
+        onUpdateCategory(values);
+        setSuccess("Category updated successfully!");
       } else {
-        setSuccess(response.success);
+        await createCategoryHandler(values);
+        onAddCategory(values);
+        setSuccess("Category added successfully!");
       }
+      form.reset();
+      successTimeoutRef.current = setTimeout(() => {
+        setSuccess("");
+      }, 50);
     } catch (error) {
       setError("An error occurred. Please try again.");
       console.error(error);
@@ -49,7 +92,32 @@ export const CategoryForm: React.FC = () => {
       setLoading(false);
     }
   };
+  const onDelete = async () => {
+    if (editingCategory) {
+      setLoading(true);
+      setError("");
+      setSuccess("");
 
+      try {
+        const res = await deleteCategoryHandler(editingCategory.catid);
+        if (res.error) {
+          setError(res.error);
+        } else {
+          onDeleteCategory(editingCategory.catid);
+          setSuccess("Category deleted successfully!");
+          form.reset();
+          successTimeoutRef.current = setTimeout(() => {
+            setSuccess("");
+          }, 5000);
+        }
+      } catch (error) {
+        setError("An error occurred. Please try again.");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
   return (
     <div className="max-w-md mx-auto">
       <Form {...form}>
@@ -94,9 +162,21 @@ export const CategoryForm: React.FC = () => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button type="submit" disabled={loading} className="w-full">
-            Submit
-          </Button>
+          <div className="flex justify-between">
+            <Button type="submit" disabled={loading} className="w-full">
+              {editingCategory ? "Update Category" : "Add Category"}
+            </Button>
+            {editingCategory && (
+              <Button
+                type="button"
+                onClick={onDelete}
+                disabled={loading}
+                className="w-full ml-4"
+              >
+                Delete Category
+              </Button>
+            )}
+          </div>
         </form>
       </Form>
     </div>

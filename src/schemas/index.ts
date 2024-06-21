@@ -23,16 +23,16 @@ export const CategorySchema = z.object({
 export type CategorySchemaType = z.infer<typeof CategorySchema>;
 
 export const ServiceSchema = z.object({
-  ino: z.number().int(),
+  ino: z.coerce.number().int().optional(),
   iname: z
     .string()
     .min(1, "Service name is required")
     .max(75, "Service name must be at most 75 characters"),
-  rate1: z.number(),
-  rate2: z.number(),
-  rate3: z.number(),
-  rate4: z.number(),
-  rate5: z.number(),
+  rate1: z.coerce.number(),
+  rate2: z.coerce.number(),
+  rate3: z.coerce.number(),
+  rate4: z.coerce.number(),
+  rate5: z.coerce.number(),
   itype: z
     .string()
     .min(1, "Service type is required")

@@ -6,20 +6,24 @@ import {
   createCategory,
   updateCategory,
   getCategoryById,
+  deleteCategory,
 } from "@/data/category";
 import { AuthError } from "next-auth";
 
 export const createCategoryHandler = async (values: CategorySchemaType) => {
   const validatedFields = CategorySchema.safeParse(values);
+  console.log(values);
 
   if (!validatedFields.success) {
     return { error: "Invalid category data" };
   }
-
   const { category, catid } = validatedFields.data;
-
   try {
-    await createCategory({ category, catid });
+    const res = await createCategory({ category, catid });
+    if (!res) {
+      console.log("hey");
+    }
+    console.log("hello");
     return { success: "Category created successfully!" };
   } catch (error) {
     if (error instanceof AuthError) {
@@ -48,6 +52,23 @@ export const modifyCategoryHandler = async (
 
     await updateCategory(catid, validatedFields.data);
     return { success: "Category updated successfully!" };
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return { error: "Authentication error" };
+    }
+    return { error: "Something went wrong" };
+  }
+};
+export const deleteCategoryHandler = async (catid: string) => {
+  try {
+    const existingCategory = await getCategoryById(catid);
+
+    if (!existingCategory) {
+      return { error: "Category not found" };
+    }
+
+    await deleteCategory(catid);
+    return { success: "Category deleted successfully!" };
   } catch (error) {
     if (error instanceof AuthError) {
       return { error: "Authentication error" };

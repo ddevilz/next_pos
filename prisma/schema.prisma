@@ -24,23 +24,23 @@ model User {
 }
 
 model Category {
-  category  String   @id
-  catid     String   @unique
+  category  String   @unique 
+  catid     String   @id 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
 model Service {
-  ino    Int     @id
+  ino    Int     @id @default(autoincrement())
   iname  String  @db.VarChar(75)
-  rate1  Float
-  rate2  Float
-  rate3  Float
-  rate4  Float
-  rate5  Float
+  rate1  Int
+  rate2  Int
+  rate3  Int
+  rate4  Int
+  rate5  Int
   itype  String  @db.VarChar(30)
 }
 model Order {
-  orderNumber    Int      @id
+  orderNumber    Int      @id @default(autoincrement())
   dueDate        DateTime?
   dueTime        DateTime? @db.Time
   customer       String   @db.VarChar(255)

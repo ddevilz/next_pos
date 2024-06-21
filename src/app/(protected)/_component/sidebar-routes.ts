@@ -8,15 +8,21 @@ export const routes = [
     color: "text-sky-500",
   },
   {
-    label: "Dashboard",
+    label: "Order",
     icon: LayoutDashboard,
-    href: "/dashboard",
+    href: "/order",
     color: "text-sky-500",
   },
   {
-    label: "Dashboard",
+    label: "Service",
     icon: LayoutDashboard,
-    href: "/dashboard",
+    href: "/service",
+    color: "text-sky-500",
+  },
+  {
+    label: "Category",
+    icon: LayoutDashboard,
+    href: "/category",
     color: "text-sky-500",
   },
 ];
