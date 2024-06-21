@@ -29,6 +29,7 @@ model Category {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
+
 model Service {
   ino    Int     @id @default(autoincrement())
   iname  String  @db.VarChar(75)
@@ -39,11 +40,20 @@ model Service {
   rate5  Int
   itype  String  @db.VarChar(30)
 }
+
 model Order {
-  orderNumber    Int      @id @default(autoincrement())
-  dueDate        DateTime?
-  dueTime        DateTime? @db.Time
-  customer       String   @db.VarChar(255)
-  totalQuantity  Int
-  orderStatus    String   @db.VarChar(200)
+  orderNumber   Int       @id @default(autoincrement())
+  dueDate       DateTime?
+  dueTime       DateTime? @db.Time
+  customer      String    @db.VarChar(255)
+  totalQuantity Int
+  orderStatus   String    @db.VarChar(200)
+}
+
+model Customer {
+  cid    Int    @id @default(autoincrement())
+  cname  String @db.VarChar(255)
+  mobile String @db.VarChar(15)
+  add1   String @db.VarChar(255)
+  rtype  String @db.VarChar(50)
 }

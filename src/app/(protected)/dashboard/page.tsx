@@ -1,26 +1,19 @@
 "use client";
 
 import { logout } from "@/actions/logout";
+import LogoutButton from "@/components/auth/logout-button";
 import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import Sidebar from "@/app/(protected)/_component/Sidebar";
 
-const Home = () => {
+const Dashboard = () => {
   const user = useCurrentUser();
-
-  const onClick = async () => {
-    await logout();
-  };
 
   return (
     <div>
-      <Sidebar />
       {JSON.stringify(user)}
-      <Button onClick={onClick} type="submit">
-        Sign out
-      </Button>
+      <LogoutButton />
     </div>
   );
 };
 
-export default Home;
+export default Dashboard;

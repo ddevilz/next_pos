@@ -8,9 +8,7 @@ const Sidebar = () => {
   return (
     <Sheet>
       <SheetTrigger>
-        <Button>
-          <Menu />
-        </Button>
+        <Menu className="text-white" />
       </SheetTrigger>
       <SheetContent className="bg-[#26427d]" side={"left"}>
         <SidebarContent />
