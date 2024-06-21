@@ -43,13 +43,13 @@ const CombinedForm: React.FC = () => {
       <FormHOC title="Customer Info" form={form1}>
         {(loading) => <CustomerInfoForm form={form1} loading={loading} />}
       </FormHOC>
-      <FormHOC title="Other Info" form={form2}>
+      <FormHOC form={form2}>
         {(loading) => <ServicesSelection form={form2} loading={loading} />}
       </FormHOC>
-      <FormHOC title="More Info" form={form3}>
-        {(loading) => <TotalInvoice form={form2} loading={loading} />}
-      </FormHOC>
       <div className="w-full mt-4">
+        <FormHOC title="More Info" form={form3}>
+          {(loading) => <TotalInvoice form={form2} loading={loading} />}
+        </FormHOC>
         <FormError message={error} />
         <FormSuccess message={success} />
         <Button

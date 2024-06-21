@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "../ui/card";
 import { Form } from "@/components/ui/form";
 
 interface FormHOCProps {
-  title: string;
+  title?: string;
   form: UseFormReturn;
   children: (loading: boolean) => ReactNode;
 }
@@ -14,9 +14,11 @@ const FormHOC: React.FC<FormHOCProps> = ({ title, form, children }) => {
 
   return (
     <Card className="w-full">
-      <CardHeader>
-        <span className="font-semibold text-center">{title}</span>
-      </CardHeader>
+      {title && (
+        <CardHeader>
+          <span className="font-semibold text-center">{title}</span>
+        </CardHeader>
+      )}
       <CardContent>
         <Form {...form}>
           <div className="space-y-6">

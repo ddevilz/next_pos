@@ -11,7 +11,7 @@ import CombinedForm from "@/components/invoice/combined-forms";
 const Order = () => {
   return (
     <>
-      <div className="flex h-full items-center justify-center p-6">
+      <div className="flex h-full w-full items-center justify-center p-6">
         <CombinedForm />
       </div>
     </>

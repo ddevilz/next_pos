@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   FormField,
   FormItem,
@@ -6,15 +6,17 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
-import { useCustomers } from "@/hooks/useCustomers"; // Adjust the import path accordingly
+import { useCustomers } from "@/hooks/useCustomers";
 
 interface Customer {
   id: number;
   cname: string;
   mobile: string;
-  address: string;
+  add1: string;
 }
 
 interface CustomerInfoFormProps {
@@ -27,77 +29,103 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
   loading,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const { customers, isLoading, isError } = useCustomers(searchTerm);
+  const scrollAreaRef = useRef(null);
 
   const handleCustomerSelect = (customer: Customer) => {
     form.setValue("mobile", customer.mobile);
     form.setValue("cname", customer.cname);
-    form.setValue("address", customer.address);
+    form.setValue("add1", customer.add1);
     setSearchTerm(customer.mobile);
+    setIsDropdownVisible(false);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        scrollAreaRef.current &&
+        !(scrollAreaRef.current as any).contains(event.target)
+      ) {
+        setIsDropdownVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [scrollAreaRef]);
 
   return (
     <>
-      <FormField
-        control={form.control}
-        name="mobile"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Phone number</FormLabel>
-            <FormControl>
-              <Input
-                {...field}
-                disabled={loading}
-                placeholder="9876541230"
-                type="text"
-                onChange={(e) => {
-                  field.onChange(e);
-                  setSearchTerm(e.target.value);
-                }}
-              />
-            </FormControl>
-            <FormMessage />
-            {isLoading && <p>Loading...</p>}
-            {isError && <p>Error loading customers</p>}
-            {customers && customers.length > 0 && (
-              <div className="customer-list">
-                <ul>
-                  {customers.map((customer: Customer) => (
-                    <li
+      <div className="flex  gap-1 relative">
+        <FormField
+          control={form.control}
+          name="mobile"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Phone number</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  disabled={loading}
+                  placeholder="9876541230"
+                  type="text"
+                  onChange={(e) => {
+                    field.onChange(e);
+                    setSearchTerm(e.target.value);
+                    setIsDropdownVisible(true);
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {isError && <p>Error loading customers</p>}
+        <div className="absolute top-[5rem]" ref={scrollAreaRef}>
+          {isDropdownVisible && customers && customers.cus.length > 0 && (
+            <ScrollArea className="h-72 w-42 bg-black text-white rounded-md">
+              <div className="p-4">
+                {customers.cus.map((customer: Customer) => (
+                  <>
+                    <div
                       key={customer.id}
                       onClick={() => handleCustomerSelect(customer)}
                       style={{ cursor: "pointer" }}
                     >
                       {customer.cname} - {customer.mobile}
-                    </li>
-                  ))}
-                </ul>
+                    </div>
+                    <Separator className="my-2" />
+                  </>
+                ))}
               </div>
-            )}
-          </FormItem>
-        )}
-      />
+            </ScrollArea>
+          )}
+        </div>
+        <FormField
+          control={form.control}
+          name="cname"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  disabled={loading}
+                  placeholder="Name"
+                  type="text"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
       <FormField
         control={form.control}
-        name="cname"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Name</FormLabel>
-            <FormControl>
-              <Input
-                {...field}
-                disabled={loading}
-                placeholder="Name"
-                type="text"
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="address"
+        name="add1"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Address</FormLabel>
