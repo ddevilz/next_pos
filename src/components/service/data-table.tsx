@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import {
   ColumnDef,
@@ -101,7 +99,7 @@ export const DataTableDemo: React.FC<DataTableDemoProps> = ({
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full overflow-auto">
       <div className="rounded-md border">
         <Table>
           <TableHeader>

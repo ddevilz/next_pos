@@ -39,6 +39,8 @@ model Service {
   rate4 Int
   rate5 Int
   itype String @db.VarChar(30)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 }
 
 model Order {

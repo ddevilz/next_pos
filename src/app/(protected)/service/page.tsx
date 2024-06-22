@@ -42,7 +42,6 @@ const ParentComponent: React.FC = () => {
         console.error("Error fetching categories:", error);
       }
     };
-
     fetchServices();
     fetchCategories();
   }, []);
@@ -77,7 +76,7 @@ const ParentComponent: React.FC = () => {
 
   return (
     <div className="flex justify-between">
-      <div className="w-3/4 pr-4">
+      <div className="w-1/2">
         <ServiceForm
           onAddService={handleAddService}
           onUpdateService={handleUpdateService}
@@ -86,11 +85,15 @@ const ParentComponent: React.FC = () => {
           categories={categories}
         />
       </div>
-      <DataTableDemo
-        data={services}
-        onEdit={(service) => setEditingService(service)}
-        onDelete={(ino) => handleDeleteService(ino)}
-      />
+      <div className="w-1/2">
+        <div className="h-full overflow-auto">
+          <DataTableDemo
+            data={services}
+            onEdit={(service) => setEditingService(service)}
+            onDelete={(ino) => handleDeleteService(ino)}
+          />
+        </div>
+      </div>
     </div>
   );
 };

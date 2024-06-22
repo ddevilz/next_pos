@@ -55,7 +55,7 @@ const CategoryPage = () => {
 
   return (
     <div className="flex justify-between">
-      <div className="w-3/4 pr-4">
+      <div className="w-1/2 ">
         <CategoryForm
           onAddCategory={handleAddCategory}
           onUpdateCategory={handleUpdateCategory}
@@ -63,7 +63,7 @@ const CategoryPage = () => {
           editingCategory={editingCategory}
         />
       </div>
-      <div className="w-1/2 pl-4">
+      <div className="w-1/2">
         <DataTableDemo
           data={categories}
           onEdit={handleEditCategory}
