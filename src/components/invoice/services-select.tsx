@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { useFetch } from "@/hooks/useFetch";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 interface ServicesSelectionProps {
   form: UseFormReturn;
   loading: boolean;
+  onAddService: (service: SelectedService) => void;
 }
 
 interface Category {
@@ -18,6 +19,10 @@ interface Service {
   ino: number;
   iname: string;
   rate1: number;
+  rate2?: number;
+  rate3?: number;
+  rate4?: number;
+  rate5?: number;
 }
 
 interface SelectedService extends Service {
@@ -28,16 +33,27 @@ interface SelectedService extends Service {
 const ServicesSelection: React.FC<ServicesSelectionProps> = ({
   form,
   loading,
+  onAddService,
 }) => {
   const {
     data: categories,
     isLoading: isCategoriesLoading,
     isError: isCategoriesError,
   } = useFetch("/api/category");
+
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedService, setSelectedService] =
     useState<SelectedService | null>(null);
   const [addedServices, setAddedServices] = useState<SelectedService[]>([]);
+
+  const [rateType, setRateType] = useState<string>("rate1");
+  const storedRateType =
+    typeof window !== "undefined" ? localStorage.getItem("rate-type") : "rate1";
+
+  useEffect(() => {
+    setRateType(storedRateType || "rate1");
+  }, [storedRateType]);
+
   const {
     data: services,
     isLoading: isServicesLoading,
@@ -63,16 +79,19 @@ const ServicesSelection: React.FC<ServicesSelectionProps> = ({
   };
 
   const handleServiceClick = (service: Service) => {
+    const rate = parseInt(service[rateType as keyof Service] as any) || 0;
     setSelectedService({ ...service, quantity: 1, notes: "" });
     serviceForm.setValue("iname", service.iname);
-    serviceForm.setValue("rate", service.rate1);
+    serviceForm.setValue("rate", rate);
     serviceForm.setValue("quantity", 1);
     serviceForm.setValue("notes", "");
   };
 
   const handleAddService = (data: any) => {
     if (selectedService) {
-      setAddedServices([...addedServices, { ...selectedService, ...data }]);
+      const newService = { ...selectedService, ...data };
+      setAddedServices([...addedServices, newService]);
+      onAddService(newService);
       setSelectedService(null);
       serviceForm.reset();
     }
@@ -163,7 +182,6 @@ const ServicesSelection: React.FC<ServicesSelectionProps> = ({
               <Input
                 {...serviceForm.register("iname")}
                 placeholder="Service Name"
-                readOnly
               />
               <Input
                 {...serviceForm.register("rate")}
@@ -179,48 +197,6 @@ const ServicesSelection: React.FC<ServicesSelectionProps> = ({
             </div>
             <Button type="submit">Add</Button>
           </form>
-        </div>
-      )}
-
-      {addedServices.length > 0 && (
-        <div className="mt-4">
-          <h3 className="text-lg font-bold mb-4">Added Services</h3>
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Service Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Rate
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Quantity
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Notes
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {addedServices.map((service, index) => (
-                <tr key={index}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {service.iname}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {service.rate1}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {service.quantity}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {service.notes}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       )}
     </div>

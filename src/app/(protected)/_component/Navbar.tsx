@@ -33,11 +33,11 @@ const Navbar = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="rate-1">rate-1</SelectItem>
-                <SelectItem value="rate-2">rate-2</SelectItem>
-                <SelectItem value="rate-3">rate-3</SelectItem>
-                <SelectItem value="rate-4">rate-4</SelectItem>
-                <SelectItem value="rate-5">rate-5</SelectItem>
+                <SelectItem value="rate1">rate-1</SelectItem>
+                <SelectItem value="rate2">rate-2</SelectItem>
+                <SelectItem value="rate3">rate-3</SelectItem>
+                <SelectItem value="rate4">rate-4</SelectItem>
+                <SelectItem value="rate5">rate-5</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

@@ -28,6 +28,7 @@ export const ServiceSchema = z.object({
     .string()
     .min(1, "Service name is required")
     .max(75, "Service name must be at most 75 characters"),
+  rate: z.number().min(0).optional(),
   rate1: z.coerce.number(),
   rate2: z.coerce.number(),
   rate3: z.coerce.number(),
@@ -37,6 +38,28 @@ export const ServiceSchema = z.object({
     .string()
     .min(1, "Service type is required")
     .max(30, "Service type must be at most 30 characters"),
+  quantity: z.number().min(1).optional(),
+  notes: z.string().optional(),
 });
 
 export type ServiceSchemaType = z.infer<typeof ServiceSchema>;
+
+export const InvoiceSchema = z.object({
+  cname: z.string(),
+  mobile: z.string(),
+  add1: z.string(),
+  addedServices: z.array(ServiceSchema),
+  advancePaid: z.string().transform((str) => parseFloat(str)),
+  discountAmount: z.string().transform((str) => parseFloat(str)),
+  dueDate: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((str) => (str ? new Date(str) : null)),
+  gst: z.string().transform((str) => parseFloat(str)),
+  totalAmount: z.string().transform((str) => parseFloat(str)),
+  remainingAmount: z.string().transform((str) => parseFloat(str)),
+  totalAfterDiscount: z.string().transform((str) => parseFloat(str)),
+  totalAfterGST: z.string().transform((str) => parseFloat(str)),
+});
+export type InvoiceSchemaType = z.infer<typeof InvoiceSchema>;

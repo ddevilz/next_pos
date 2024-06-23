@@ -4,7 +4,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export const useCustomers = (phone: string) => {
   const { data, error } = useSWR(
-    phone ? `/api/customers?phone=${encodeURIComponent(phone)}` : null,
+    phone?.trim() ? `/api/customers?phone=${encodeURIComponent(phone)}` : null,
     fetcher,
     {
       revalidateOnFocus: false,

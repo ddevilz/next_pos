@@ -53,9 +53,36 @@ model Order {
 }
 
 model Customer {
-  cid    Int    @id @default(autoincrement())
-  cname  String @db.VarChar(255)
-  mobile String @db.VarChar(15)
-  add1   String @db.VarChar(255)
-  rtype  String @db.VarChar(50)
+  cid    Int     @id @default(autoincrement())
+  cname  String  @db.VarChar(255)
+  mobile String  @unique @db.VarChar(15)
+  add1   String  @db.VarChar(255)
+  rtype  String? @default("regular") @db.VarChar(50)
+}
+
+model Invoice {
+  id                 Int              @id @default(autoincrement())
+  add1               String
+  advancePaid        Float
+  cname              String
+  discountAmount     Float
+  dueDate            DateTime?
+  gst                Float
+  mobile             String
+  remainingAmount    Float
+  totalAfterDiscount Float
+  totalAfterGST      Float
+  totalAmount        Float
+  services           InvoiceService[]
+}
+
+model InvoiceService {
+  id        Int     @id @default(autoincrement())
+  invoiceId Int
+  ino       Int?
+  iname     String
+  quantity  Int     @default(1)
+  notes     String?
+  rate      Float
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
 }

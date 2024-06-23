@@ -72,6 +72,8 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
                   disabled={loading}
                   placeholder="9876541230"
                   type="text"
+                  required
+                  autoComplete="off"
                   onChange={(e) => {
                     field.onChange(e);
                     setSearchTerm(e.target.value);
@@ -116,6 +118,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
                   disabled={loading}
                   placeholder="Name"
                   type="text"
+                  required
                 />
               </FormControl>
               <FormMessage />
