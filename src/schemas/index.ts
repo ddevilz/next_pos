@@ -49,14 +49,25 @@ export const InvoiceSchema = z.object({
   mobile: z.string(),
   add1: z.string(),
   addedServices: z.array(ServiceSchema),
-  advancePaid: z.string().transform((str) => parseFloat(str)),
-  discountAmount: z.string().transform((str) => parseFloat(str)),
+  advancePaid: z
+    .string()
+    .transform((str) => parseFloat(str))
+    .optional()
+    .default("0"),
+  discountAmount: z
+    .string()
+    .transform((str) => parseFloat(str))
+    .optional()
+    .default("0"),
   dueDate: z
     .string()
     .optional()
     .nullable()
     .transform((str) => (str ? new Date(str) : null)),
-  gst: z.string().transform((str) => parseFloat(str)),
+  gst: z
+    .string()
+    .transform((str) => parseFloat(str))
+    .default("0"),
   totalAmount: z.string().transform((str) => parseFloat(str)),
   remainingAmount: z.string().transform((str) => parseFloat(str)),
   totalAfterDiscount: z.string().transform((str) => parseFloat(str)),
