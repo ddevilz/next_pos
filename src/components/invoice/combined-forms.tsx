@@ -45,6 +45,10 @@ const CombinedForm: React.FC = () => {
       const res = await saveInvoice(combinedData);
       if (res.success) {
         toast.success("Invoice created successfully!");
+        form1.reset();
+        form2.reset();
+        form3.reset();
+        setAddedServices([]);
       } else {
         throw Error;
       }
@@ -66,21 +70,31 @@ const CombinedForm: React.FC = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 p-4">
       <Toaster richColors position="top-center" />
-      <FormHOC title="Customer Info" form={form1}>
-        {(loading) => <CustomerInfoForm form={form1} loading={loading} />}
-      </FormHOC>
-      <FormHOC title="Services Selection" form={form2}>
-        {(loading) => (
-          <ServicesSelection
-            form={form2}
-            loading={loading}
-            onAddService={handleAddService}
-          />
-        )}
-      </FormHOC>
-      <div>
+
+      {/* Customer Info Form - Spans across all columns */}
+      <div className="col-span-1 lg:col-span-4">
+        <FormHOC title="Customer Info" form={form1}>
+          {(loading) => <CustomerInfoForm form={form1} loading={loading} />}
+        </FormHOC>
+      </div>
+
+      {/* Services Selection */}
+      <div className="col-span-1 lg:col-span-2">
+        <FormHOC title="Services Selection" form={form2}>
+          {(loading) => (
+            <ServicesSelection
+              form={form2}
+              loading={loading}
+              onAddService={handleAddService}
+            />
+          )}
+        </FormHOC>
+      </div>
+
+      {/* Total Invoice */}
+      <div className="col-span-1 lg:col-span-2">
         <FormHOC title="Total Invoice" form={form3}>
           {(loading) => (
             <TotalInvoice
@@ -91,13 +105,16 @@ const CombinedForm: React.FC = () => {
             />
           )}
         </FormHOC>
+
         <FormError message={error} />
         <FormSuccess message={success} />
+
+        {/* Submit Button */}
         <Button
           type="button"
           onClick={onSubmit}
           disabled={loading}
-          className="w-full"
+          className="w-full mt-4"
         >
           Submit All
         </Button>

@@ -77,11 +77,14 @@ export const DataTableDemo: React.FC<DataTableDemoProps> = ({
         const service = row.original;
         return (
           <div className="flex space-x-2">
-            <button className="text-grey-500" onClick={() => onEdit(service)}>
+            <button
+              className="text-blue-500 hover:text-blue-700"
+              onClick={() => onEdit(service)}
+            >
               Edit
             </button>
             <button
-              className="text-red-500"
+              className="text-red-500 hover:text-red-700"
               onClick={() => onDelete(service.ino ?? 0)} // Use a default value if ino is undefined
             >
               Delete
@@ -99,52 +102,50 @@ export const DataTableDemo: React.FC<DataTableDemoProps> = ({
   });
 
   return (
-    <div className="w-full h-full overflow-auto">
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
+    <div className="w-full h-full overflow-auto bg-white rounded-md shadow-lg border border-gray-200">
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id} className="bg-gray-100 border-b">
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id} className="p-2 text-left font-medium">
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id} className="border-b hover:bg-gray-50">
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id} className="p-2">
+                    {flexRender(
+                      cell.column.columnDef.cell,
+                      cell.getContext()
+                    )}
+                  </TableCell>
                 ))}
               </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                className="h-24 text-center text-gray-500"
+              >
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 };

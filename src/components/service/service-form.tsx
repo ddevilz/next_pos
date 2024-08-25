@@ -21,7 +21,6 @@ import {
   modifyServiceHandler,
   deleteServiceHandler,
 } from "@/actions/service";
-import { log } from "console";
 
 type ServiceFormProps = {
   onAddService: (service: ServiceSchemaType) => void;
@@ -88,21 +87,26 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({
     try {
       if (editingService) {
         if (!values.ino) {
-          throw error;
+          throw new Error("Service ID is required");
         }
         await modifyServiceHandler(values.ino, values);
         onUpdateService(values);
         setSuccess("Service updated successfully!");
+        // Clear editingService after update
+        form.reset();
+        successTimeoutRef.current = setTimeout(() => {
+          setSuccess("");
+        }, 5000);
       } else {
         await createServiceHandler(values);
-        console.log("hello");
         onAddService(values);
         setSuccess("Service added successfully!");
+        // Clear form after addition
+        form.reset();
+        successTimeoutRef.current = setTimeout(() => {
+          setSuccess("");
+        }, 5000);
       }
-      form.reset();
-      successTimeoutRef.current = setTimeout(() => {
-        setSuccess("");
-      }, 5000);
     } catch (error) {
       setError("An error occurred. Please try again.");
       console.error(error);
@@ -119,18 +123,28 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({
 
       try {
         if (!editingService.ino) {
-          throw error;
+          throw new Error("Service ID is required");
         }
         const response = await deleteServiceHandler(editingService.ino);
         if (response.success) {
           onDeleteService(editingService.ino);
           setSuccess(response.success);
           form.reset();
+          // Reset editingService after deletion
+          form.setValue("ino", 0);
+          form.setValue("iname", "");
+          form.setValue("rate1", 0);
+          form.setValue("rate2", 0);
+          form.setValue("rate3", 0);
+          form.setValue("rate4", 0);
+          form.setValue("rate5", 0);
+          form.setValue("itype", "");
         } else {
           setError(response.error);
           console.error(response.error);
         }
       } catch (error) {
+        setError("An error occurred. Please try again.");
         console.error(error);
       } finally {
         setLoading(false);

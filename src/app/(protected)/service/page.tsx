@@ -27,6 +27,7 @@ const ParentComponent: React.FC = () => {
         setLoading(false);
       }
     };
+
     const fetchCategories = async () => {
       try {
         const response = await fetch("/api/category");
@@ -34,7 +35,6 @@ const ParentComponent: React.FC = () => {
           throw new Error("Failed to fetch categories");
         }
         const data = await response.json();
-        console.log("Fetched categories:", data.categories);
         setCategories(
           data.categories.map((cat: { category: string }) => cat.category)
         );
@@ -42,6 +42,7 @@ const ParentComponent: React.FC = () => {
         console.error("Error fetching categories:", error);
       }
     };
+
     fetchServices();
     fetchCategories();
   }, []);
@@ -57,9 +58,6 @@ const ParentComponent: React.FC = () => {
       )
     );
   };
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   const handleDeleteService = async (ino: number) => {
     try {
@@ -71,12 +69,18 @@ const ParentComponent: React.FC = () => {
       } else {
         console.error(response.error);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error deleting service:", error);
+    }
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="flex justify-between">
-      <div className="w-1/2">
+    <div className="flex flex-col lg:flex-row gap-6 p-4">
+      <div className="lg:w-1/2 w-full">
         <ServiceForm
           onAddService={handleAddService}
           onUpdateService={handleUpdateService}
@@ -85,14 +89,12 @@ const ParentComponent: React.FC = () => {
           categories={categories}
         />
       </div>
-      <div className="w-1/2">
-        <div className="h-full overflow-auto">
-          <DataTableDemo
-            data={services}
-            onEdit={(service) => setEditingService(service)}
-            onDelete={(ino) => handleDeleteService(ino)}
-          />
-        </div>
+      <div className="lg:w-1/2 w-full h-96 overflow-auto">
+        <DataTableDemo
+          data={services}
+          onEdit={(service) => setEditingService(service)}
+          onDelete={(ino) => handleDeleteService(ino)}
+        />
       </div>
     </div>
   );

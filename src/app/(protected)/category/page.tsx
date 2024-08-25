@@ -54,8 +54,8 @@ const CategoryPage = () => {
   };
 
   return (
-    <div className="flex justify-between">
-      <div className="w-1/2 ">
+    <div className="flex flex-col lg:flex-row gap-6 p-4">
+      <div className="lg:w-1/2 w-full">
         <CategoryForm
           onAddCategory={handleAddCategory}
           onUpdateCategory={handleUpdateCategory}
@@ -63,7 +63,7 @@ const CategoryPage = () => {
           editingCategory={editingCategory}
         />
       </div>
-      <div className="w-1/2">
+      <div className="lg:w-1/2 w-full h-96 overflow-auto">
         <DataTableDemo
           data={categories}
           onEdit={handleEditCategory}

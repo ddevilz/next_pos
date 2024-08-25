@@ -38,7 +38,7 @@ export const ServiceSchema = z.object({
     .string()
     .min(1, "Service type is required")
     .max(30, "Service type must be at most 30 characters"),
-  quantity: z.number().min(1).optional(),
+  quantity: z.coerce.number().min(1).optional(),
   notes: z.string().optional(),
 });
 

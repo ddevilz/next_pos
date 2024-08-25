@@ -94,7 +94,7 @@ const TotalInvoice: React.FC<TotalInvoiceProps> = ({
                 <td className="px-6 py-4 whitespace-nowrap">
                   {service.quantity}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">{service.notes}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-wrap">{service.notes}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <Button
                     onClick={() => removeServices(index)}
@@ -120,7 +120,7 @@ const TotalInvoice: React.FC<TotalInvoiceProps> = ({
   };
 
   return (
-    <div className="p-4">
+    <div className="">
       <h1 className="text-2xl font-bold mb-4">Invoice Details</h1>
       <form className="space-y-4">
         {renderServicesTable()}

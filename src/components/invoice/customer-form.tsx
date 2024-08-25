@@ -59,7 +59,7 @@ const CustomerInfoForm: React.FC<CustomerInfoFormProps> = ({
 
   return (
     <>
-      <div className="flex  gap-1 relative">
+      <div className="flex gap-1 relative">
         <FormField
           control={form.control}
           name="mobile"
